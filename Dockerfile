@@ -1,5 +1,6 @@
 FROM php:7.2-apache
-MAINTAINER alex.junior@engesoftware.com.br
+
+MAINTAINER juliano.buzanello@engesoftware.com.br
 
 # Install PHP extensions and PECL modules.
 RUN buildDeps=" \
@@ -32,6 +33,10 @@ RUN buildDeps=" \
     && apt-get purge -y --auto-remove $buildDeps \
     && rm -r /var/lib/apt/lists/* \
     && a2enmod rewrite
+
+RUN pecl install xdebug docker-php-ext-enable xdebug
+RUN echo 'zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so' \
+    > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Install Composer.
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
